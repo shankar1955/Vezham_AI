@@ -1,0 +1,50 @@
+# train_model.py
+# Beginner-friendly YOLOv5 training script
+
+from ultralytics import YOLO
+import os
+
+# ────────────────────────────────────────────────
+# 1️⃣ Ask user for dataset folder
+# ────────────────────────────────────────────────
+
+dataset_folder = r"C:\Users\avant\Downloads\Human Crowd.v1i.yolov5pytorch"
+
+data_yaml_path = os.path.join(dataset_folder, "data.yaml")
+
+if not os.path.exists(data_yaml_path):
+    print("❌ data.yaml not found inside", dataset_folder)
+    exit()
+
+# ────────────────────────────────────────────────
+# 2️⃣ Ask for training settings
+# ────────────────────────────────────────────────
+
+epochs = int(input("Enter number of epochs (e.g., 50): "))
+imgsz = int(input("Enter image size (e.g., 640): "))
+batch = int(input("Enter batch size (e.g., 8 or 16): "))
+device = input("Enter device (cpu or 0 for GPU): ")
+
+# ────────────────────────────────────────────────
+# 3️⃣ Load pretrained YOLOv5s
+# ────────────────────────────────────────────────
+
+model = YOLO("yolov5s.pt")
+
+# ────────────────────────────────────────────────
+# 4️⃣ Start Training
+# ────────────────────────────────────────────────
+
+results = model.train(
+    data=data_yaml_path,
+    epochs=epochs,
+    imgsz=imgsz,
+    batch=batch,
+    device=device,
+    project="runs/train",
+    name="crowd_model",
+    exist_ok=True
+)
+
+print("\n✅ Training Finished!")
+print("Best model saved at:", results.save_dir + "/weights/best.pt")               
